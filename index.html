@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .add-task-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 30px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .add-task-btn:hover {
+            background-color: #5a6268;
+        }
+        .status-box {
+            cursor: pointer;
+            padding: 5px 10px;
+            color: black;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .priority-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ff6600;
+            font-size: 16px;
+        }
+        .priority-btn.active {
+            background-color: #d3d3d3;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ff0000;
+            font-size: 16px;
+        }
+        #priority-list {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        
+        <h2>Tasks</h2>
+        <table id="task-table">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th class="date-created">Date Created</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        
+        <button id="add-task-btn" class="add-task-btn">+</button>
+
+        <h2>Priority List</h2>
+        <ul id="priority-list"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

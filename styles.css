@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    width: 50%;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.add-task-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    line-height: 30px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.add-task-btn:hover {
+    background-color: #5a6268;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff0000;
+    font-size: 16px;
+}
+
+.priority-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff6600;
+    font-size: 16px;
+}
+
+.priority-btn.active {
+    background-color: #ffd1a4;
+    border-radius: 4px;
+}
+
+.status-box {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-align: center;
+    color: #fff;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 10px;
+    background: #f9f9f9;
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+li.dragging {
+    opacity: 0.5;
+}
+
+.priority-controls {
+    display: inline-flex;
+    gap: 5px;
+}
+
+.priority-controls button {
+    cursor: pointer;
+    background-color: #ccc;
+    border: none;
+    border-radius: 3px;
+    padding: 2px 5px;
+    color: #333;
+}
+
+.priority-controls button:hover {
+    background-color: #aaa;
+}
