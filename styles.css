@@ -2,12 +2,15 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     color: #333;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-    width: 50%;
-    margin: 50px auto;
-    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -125,4 +128,23 @@ li.dragging {
 
 .priority-controls button:hover {
     background-color: #aaa;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        margin: 10px auto;
+        padding: 5px;
+    }
+
+    th, td {
+        padding: 6px;
+    }
+
+    .add-task-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
 }
