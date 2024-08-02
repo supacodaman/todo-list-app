@@ -64,6 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
             listItem.setAttribute('data-id', task.id);
             listItem.innerHTML = `
                 ${task.text}
+                <span class="priority-controls">
+                    <button class="remove-priority-btn" data-id="${task.id}">✂️</button>
+                </span>
             `;
             priorityList.appendChild(listItem);
         });
@@ -157,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tasks[index].dateCreated = e.target.textContent.trim();
                 saveTasks();
                 renderTasks(); // Re-render tasks to ensure correct order
-            }, 1500); // Wait 1500ms after user stops typing
+            }, 500); // Wait 500ms after user stops typing
         }
     });
 
@@ -195,6 +198,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const task = tasks[index];
             if (task.status !== 'Done') {
                 task.priority = !task.priority;
+                saveTasks();
+                renderTasks();
+            }
+        }
+    });
+
+    priorityList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-priority-btn')) {
+            const taskId = e.target.getAttribute('data-id');
+            const task = tasks.find(task => task.id === taskId);
+            if (task) {
+                task.priority = false;
                 saveTasks();
                 renderTasks();
             }
