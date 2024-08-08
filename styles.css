@@ -288,6 +288,17 @@ li.dragging {
     color: #333;
 }
 
+/* Light brown background for priority list tiles */
+.theme-light-brown .priority-controls button {
+    background-color: #d3bda7; /* Light beige brown */
+    color: #5b3a29; /* Darker brown text */
+}
+
+.theme-light-brown li {
+    background-color: #f4e9d2; /* Light beige for list items */
+    border-color: #d3bda7; /* Match border with background color */
+}
+
 /* Theme dark navy styles */
 .theme-dark-navy .container, .theme-dark-navy table, .theme-dark-navy ul {
     background-color: #001f3f;
@@ -307,15 +318,15 @@ li.dragging {
     color: #b0c4de;
 }
 
-.theme-dark-navy li {
-    background-color: #001f3f;
-    border-color: #555;
-    color: #fff;
+/* Dark navy background for priority list tiles */
+.theme-dark-navy .priority-controls button {
+    background-color: #2e3a45; /* Darker navy */
+    color: #cfd8dc; /* Light grey text */
 }
 
-.theme-dark-navy .priority-controls button {
-    background-color: #555;
-    color: #fff;
+.theme-dark-navy li {
+    background-color: #1b2a38; /* Dark navy blue for list items */
+    border-color: #2e3a45; /* Match border with background color */
 }
 
 .theme-dark-navy .priority-controls button:hover {
