@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>
                     <div class="status-box" data-index="${index}" style="background-color: ${getStatusColor(task.status)}" role="status" aria-live="polite">${task.status}</div>
                 </td>
-                <td class="action-column">
+                <td>
                     <button class="priority-btn ${task.priority ? 'active' : ''}" data-index="${index}" ${task.status === 'Done' ? 'disabled' : ''}>🔥</button>
                     <button class="delete-btn" data-index="${index}">🗑️</button>
                 </td>
@@ -123,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         priorityTasks.forEach(task => {
             const listItem = document.createElement('li');
-            listItem.setAttribute('draggable', true);
             listItem.setAttribute('data-id', task.id);
             listItem.innerHTML = `
                 ${task.text}
@@ -167,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
 
-        const afterElement = getDragAfterElement(e.currentTarget, e.clientY);
+        const afterElement = getDragAfterElement(e.currentTarget, e.clientY, isVerticalOnly);
         const draggingItem = document.querySelector('.dragging');
         
         if (afterElement == null) {
@@ -202,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.target.classList.remove('dragging');
     }
 
-    function getDragAfterElement(container, y) {
+    function getDragAfterElement(container, y, isVerticalOnly) {
         const draggableElements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
 
         return draggableElements.reduce((closest, child) => {
