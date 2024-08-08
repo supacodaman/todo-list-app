@@ -42,6 +42,7 @@ h1, h2 {
     margin-left: 5px;
     margin-right: 5px;
 }
+
 .theme-toggle-container {
     display: flex;
     justify-content: flex-end;
@@ -88,7 +89,6 @@ th {
     background-color: #f4f4f4;
 }
 
-
 /* Action column styles */
 th.action-column, td.action-column {
     width: 70px; /* Set a reasonable fixed width for the action column */
@@ -117,14 +117,17 @@ th.action-column {
     padding: 8px; /* Padding to match other headers */
 }
 
-/* td.action-column {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    max-width: 100px;
-} */
+/* Adjust emoji button size and prevent overflow */
+.move-up-btn {
+    font-size: 1.2em; /* Adjust the size as needed */
+    padding: 0.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff; /* Optional: color for the up arrow */
+}
 
+/* Date Created column styles */
 th.date-created-column, td.date-created-column {
     width: 100px;
     text-align: center;
@@ -201,6 +204,14 @@ li {
     align-items: center;
     border-radius: 4px;
     transition: background-color 0.3s ease;
+}
+
+/* Prevent emojis from overflowing */
+li .status-box {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 li.dragging {
