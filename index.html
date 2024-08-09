@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1, minimum-scale=1">
     <title>To-Do List App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -14,23 +14,27 @@
             <button class="priority-filter" aria-label="Priority filter">🅿️</button>
             <button class="toggle-done" aria-label="Toggle done tasks">✔️</button>
         </div>
-        <h2>Tasks</h2>
-        <table id="task-table" role="table">
-            <thead>
-                <tr role="row">
-                    <th role="columnheader">Task</th>
-                    <th role="columnheader" class="date-created-column">Date Created</th>
-                    <th role="columnheader">Status</th>
-                    <th role="columnheader" class="action-column">Action</th>
-                </tr>
-            </thead>
-            <tbody role="rowgroup"></tbody>
-        </table>
+        <div class="task-table-container">
+            <h2>Tasks</h2>
+            <table id="task-table" role="table">
+                <thead>
+                    <tr role="row">
+                        <th role="columnheader">Task</th>
+                        <th role="columnheader" class="date-created-column">Date Created</th>
+                        <th role="columnheader">Status</th>
+                        <th role="columnheader" class="action-column">Action</th>
+                    </tr>
+                </thead>
+                <tbody role="rowgroup"></tbody>
+            </table>
+        </div>
         
         <button id="add-task-btn" class="add-task-btn" aria-label="Add new task">+</button>
 
-        <h2 class="priority-heading">Priority List</h2>
-        <ul id="priority-list" role="list"></ul>
+        <div class="priority-list-container">
+            <h2 class="priority-heading">Priority List</h2>
+            <ul id="priority-list" role="list"></ul>
+        </div>
     </div>
 
     <script src="script.js"></script>
