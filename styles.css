@@ -83,6 +83,7 @@ th, td {
     padding: 8px;
     text-align: left;
     word-wrap: break-word;
+    /* height: 10px */
 }
 
 th {
@@ -104,7 +105,7 @@ th:not(.action-column), td:not(.action-column) {
 td.action-column {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: left;
     gap: 5px;
     padding: 0; /* Remove padding */
     border: none; /* Remove border */
@@ -180,7 +181,7 @@ th.date-created-column, td.date-created-column {
 /* Task status box styles */
 .status-box {
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 5px 5px;
     border-radius: 4px;
     text-align: center;
     color: #000000;
@@ -204,6 +205,7 @@ li {
     align-items: center;
     border-radius: 4px;
     transition: background-color 0.3s ease;
+    height:25px
 }
 
 /* Prevent emojis from overflowing */
@@ -258,7 +260,8 @@ li.dragging {
 
     th, td {
         font-size: 12px;
-        padding: 6px;
+        padding: 5px;
+        height: 5px
     }
 
     .add-task-btn {
@@ -277,12 +280,14 @@ li.dragging {
     }
 
     th.date-created-column, td.date-created-column {
-        width: 80px;
+        width: 76px;
+        text-align: center;
     }
 
     th.action-column, td.action-column {
-        width: 40px; /* Set a reasonable fixed width for the action column */
-        text-align: left; /* Center align content in action column */
+        width: 60px; /* Set a reasonable fixed width for the action column */
+        text-align: center; /* Center align content in action column */
+        padding: 4px; /* Padding to match other headers */
     }
     
     td.action-column {
