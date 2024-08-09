@@ -285,7 +285,7 @@ li.dragging {
     }
 
     th.action-column, td.action-column {
-        width: 60px; /* Set a reasonable fixed width for the action column */
+        width: 70px; /* Set a reasonable fixed width for the action column */
         text-align: center; /* Center align content in action column */
         padding: 4px; /* Padding to match other headers */
     }
