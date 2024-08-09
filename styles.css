@@ -234,7 +234,7 @@ li.dragging {
 }
 
 .priority-controls button:hover {
-    background-color: #aaa;
+    background-color: #d88c009a;
 }
 
 .priority-controls .drag-btn {
@@ -280,6 +280,10 @@ li.dragging {
         width: 80px;
     }
 
+    th.action-column, td.action-column {
+        width: 55px; /* Set a reasonable fixed width for the action column */
+        text-align: left; /* Center align content in action column */
+    }
     
     td.action-column {
         justify-content: space-evenly; /* Ensure even spacing between buttons */
