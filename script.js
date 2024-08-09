@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let themeIndex = 0;
     const themes = ['', 'theme-light-brown', 'theme-dark-navy'];
     let toggleDoneState = 0; // 0: Show all tasks, 1: Hide done tasks, 2: Show only done tasks
-    let priorityFilterState = false; // False: Show all, True: Show only priority list
+    let priorityFilterState = false; // False: Show both lists, True: Show only priority list
 
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let longPressTimer;
@@ -344,7 +344,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    renderTasks();
+    // Initial rendering with both lists shown by default
+    updatePriorityFilterState(); // Ensure the initial state shows both lists
+    renderTasks(); // Render the tasks to ensure both lists are populated correctly
 });
 
 function handleFocus(e) {
