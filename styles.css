@@ -242,49 +242,44 @@ li.dragging {
 }
 
 
-/* Mobile responsiveness - Ensure input fields are large enough to use without zooming */
+/* Mobile responsiveness */
 @media (max-width: 600px) {
     .container {
-        width: 100%;
+        height: 100%;
+        width: 98%;
+        margin: 5px auto;
         padding: 5px;
         box-sizing: border-box;
     }
 
     body {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     th, td {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    .task-text-input {
-        font-size: 16px;
-        padding: 10px;
-        width: 100%;
+        font-size: 12px;
+        padding: 6px;
     }
 
     .add-task-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
     }
 
     li {
-        padding: 15px;
-        font-size: 16px;
+        padding: 10px;
+        font-size: 14px;
     }
 
     .status-box {
-        padding: 10px;
+        padding: 5px;
     }
 
     th.date-created-column, td.date-created-column {
         width: 80px;
     }
 }
-
 
 /* Theme light brown styles */
 .theme-light-brown .container, .theme-light-brown table, .theme-light-brown ul {
@@ -382,7 +377,7 @@ li.dragging {
 /* Remove outline on focus */
 .task-text-input:focus {
     outline: none;
-
+    
 }
 /* Add these styles to hide elements when the priority filter is active */
 .task-table-container {
