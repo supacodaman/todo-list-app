@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const taskTableContainer = document.querySelector('.task-table-container');
+    const priorityListContainer = document.querySelector('.priority-list-container');
     const taskTable = document.getElementById('task-table').getElementsByTagName('tbody')[0];
     const priorityList = document.getElementById('priority-list');
     const addTaskButton = document.getElementById('add-task-btn');
@@ -8,31 +10,76 @@ document.addEventListener('DOMContentLoaded', () => {
     let typingTimeout;
     let themeIndex = 0;
     const themes = ['', 'theme-light-brown', 'theme-dark-navy'];
-    let toggleDoneState = 0;
+    let toggleDoneState = 0; // 0: Show all tasks, 1: Hide done tasks, 2: Show only done tasks
+    let priorityFilterState = false; // False: Show all, True: Show only priority list
 
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let longPressTimer;
+    let longPressActive = false;
 
     themeToggleBtn.addEventListener('click', () => {
         themeIndex = (themeIndex + 1) % themes.length;
         document.body.className = themes[themeIndex];
     });
 
+    toggleDoneBtn.addEventListener('mousedown', () => {
+        longPressTimer = setTimeout(() => {
+            longPressActive = true;
+            toggleDoneState = 2; // Show only done tasks
+            updateDoneButtonState();
+            renderTasks();
+        }, 500); // 500ms for long press detection
+    });
+
+    toggleDoneBtn.addEventListener('mouseup', () => {
+        clearTimeout(longPressTimer);
+        if (longPressActive) {
+            longPressActive = false;
+        }
+    });
+
     toggleDoneBtn.addEventListener('click', () => {
-        toggleDoneState = (toggleDoneState + 1) % 3;
+        if (longPressActive) {
+            // Prevent single click action if long press is active
+            return;
+        }
+        if (toggleDoneState === 2) {
+            toggleDoneState = 0; // Revert to default state
+        } else {
+            toggleDoneState = toggleDoneState === 1 ? 0 : 1; // Toggle between showing and hiding done tasks
+        }
         updateDoneButtonState();
         renderTasks();
     });
 
+    priorityFilterBtn.addEventListener('click', () => {
+        priorityFilterState = !priorityFilterState;
+        updatePriorityFilterState();
+    });
+
     function updateDoneButtonState() {
         if (toggleDoneState === 0) {
+            toggleDoneBtn.classList.remove('button-done-toggled', 'button-toggled');
+        } else if (toggleDoneState === 1) {
             toggleDoneBtn.classList.add('button-toggled');
             toggleDoneBtn.classList.remove('button-done-toggled');
-        } else if (toggleDoneState === 1) {
-            toggleDoneBtn.classList.remove('button-toggled');
+        } else if (toggleDoneState === 2) {
             toggleDoneBtn.classList.add('button-done-toggled');
-        } else {
-            toggleDoneBtn.classList.remove('button-toggled', 'button-done-toggled');
+            toggleDoneBtn.classList.remove('button-toggled');
         }
+    }
+
+    function updatePriorityFilterState() {
+        if (priorityFilterState) {
+            taskTableContainer.style.display = 'none';
+            addTaskButton.style.display = 'none';
+            priorityListContainer.style.display = 'block';
+        } else {
+            taskTableContainer.style.display = 'block';
+            addTaskButton.style.display = 'flex';
+            priorityListContainer.style.display = 'block';
+        }
+        renderTasks(); // Re-render to reflect changes
     }
 
     function saveTasks() {
@@ -82,16 +129,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderTasks() {
-        tasks.sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated));
-
         taskTable.innerHTML = '';
+
         tasks.forEach((task, index) => {
-            if (toggleDoneState === 2 && task.status === 'Done') {
-                return;
+            if (toggleDoneState === 1 && task.status === 'Done') {
+                return; // Hide done tasks
             }
-            if (toggleDoneState === 1 && task.status !== 'Done') {
-                return;
+            if (toggleDoneState === 2 && task.status !== 'Done') {
+                return; // Show only done tasks
             }
+            if (priorityFilterState && !task.priority) {
+                return; // Show only priority tasks when filter is active
+            }
+
             const row = taskTable.insertRow();
             row.setAttribute('data-id', task.id);
             row.innerHTML = `
@@ -119,20 +169,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPriorityTasks() {
         priorityList.innerHTML = '';
+
         const priorityTasks = tasks.filter(task => task.priority && task.status !== 'Done');
 
-        priorityTasks.forEach(task => {
-            const listItem = document.createElement('li');
-            listItem.setAttribute('data-id', task.id);
-            listItem.innerHTML = `
-                ${task.text}
-                <span class="priority-controls">
-                    <button class="drag-btn" data-id="${task.id}" aria-label="Drag to reorder">↕️</button>
-                    <button class="remove-priority-btn" data-id="${task.id}" aria-label="Remove priority">✂️</button>
-                </span>
-            `;
-            priorityList.appendChild(listItem);
-        });
+        if (priorityTasks.length === 0) {
+            priorityList.innerHTML = '<li class="no-priority-tasks">No priority tasks</li>';
+        } else {
+            priorityTasks.forEach(task => {
+                const listItem = document.createElement('li');
+                listItem.setAttribute('data-id', task.id);
+                listItem.innerHTML = `
+                    ${task.text}
+                    <span class="priority-controls">
+                        <button class="drag-btn" data-id="${task.id}" aria-label="Drag to reorder">↕️</button>
+                        <button class="remove-priority-btn" data-id="${task.id}" aria-label="Remove priority">✂️</button>
+                    </span>
+                `;
+                priorityList.appendChild(listItem);
+            });
+        }
 
         addDragAndDropHandlers(priorityList, 'li', true);
     }
