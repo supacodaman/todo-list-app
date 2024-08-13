@@ -100,8 +100,8 @@ th {
 }
 
 th.action-column, td.action-column {
-    width: 70px;
-    text-align: left;
+    width: auto;
+    text-align: center;
 }
 
 th:not(.action-column), td:not(.action-column) {
@@ -116,6 +116,8 @@ th.date-created-column, td.date-created-column {
 th.status-column, td.status-column {
     width: 25%;
     text-align: center;
+    padding: 0;
+    margin: 0;
 }
 
 /* Action column styles */
@@ -154,12 +156,16 @@ td.action-column .action-wrapper {
 /* Task status box styles */
 .status-box {
     cursor: pointer;
-    padding: 5px;
+    padding: 0; /* Removes internal padding */
     border-radius: 4px;
     text-align: center;
     color: #000000;
     white-space: nowrap;
-}
+    display: block; /* Ensures the box behaves as a block element */
+    width: 100%; /* Takes full width of the cell */
+    height: 100%; /* Ensures it fills the cell vertically */
+    margin: 0; /* Removes margin to prevent overflow */
+} 
 
 .theme-dark-navy .status-not-started {
     background-color: #cc6666;
