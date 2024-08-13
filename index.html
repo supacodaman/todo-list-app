@@ -6,23 +6,23 @@
     <title>To-Do List App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="font-arial"> <!-- Default font class -->
     <div class="container">
         <h1>To-Do List</h1>
         <div class="theme-toggle-container">
-            <button class="theme-toggle" aria-label="Toggle theme">🎨</button>
-            <button class="priority-filter" aria-label="Priority filter">🅿️</button>
+            <button class="priority-filter" aria-label="Priority filter">🔥</button>
             <button class="toggle-done" aria-label="Toggle done tasks">✔️</button>
+            <button class="settings-toggle" aria-label="Settings">⚙️</button>
         </div>
         <div class="task-table-container">
             <h2>Tasks</h2>
             <table id="task-table" role="table">
                 <thead>
                     <tr role="row">
-                        <th role="columnheader">Task</th>
-                        <th role="columnheader" class="date-created-column">Date Created</th>
-                        <th role="columnheader">Status</th>
-                        <th role="columnheader" class="action-column">Action</th>
+                        <th class="task-column" role="columnheader">Task</th>
+                        <th class="date-created date-created-column" role="columnheader">Date Created</th>
+                        <th class="status-column" role="columnheader">Status</th>
+                        <th class="action-column" role="columnheader">Action</th>
                     </tr>
                 </thead>
                 <tbody role="rowgroup"></tbody>
@@ -34,6 +34,35 @@
         <div class="priority-list-container">
             <h2 class="priority-heading">Priority List</h2>
             <ul id="priority-list" role="list"></ul>
+        </div>
+    </div>
+
+    <!-- Settings Popup -->
+    <div id="settings-popup" class="settings-popup">
+        <div class="settings-content">
+            <span class="close-settings">&times;</span>
+            <h2>Settings</h2>
+            <ul>
+                <li>
+                    <button class="theme-toggle">Change Theme Color</button>
+                </li>
+                <li>
+                    <label for="font-select">Choose Font:</label>
+                    <select id="font-select">
+                        <option value="font-arial">Arial</option>
+                        <option value="font-courier">Courier</option>
+                        <option value="font-georgia">Georgia</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="toggle-date-created">Show "Date Created" Column:</label>
+                    <input type="checkbox" id="toggle-date-created" checked>
+                </li>
+                <li>
+                    <label for="toggle-actions">Show "Actions" Column:</label>
+                    <input type="checkbox" id="toggle-actions" checked>
+                </li>
+            </ul>
         </div>
     </div>
 
