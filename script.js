@@ -4,50 +4,72 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskTable = document.getElementById('task-table').getElementsByTagName('tbody')[0];
     const priorityList = document.getElementById('priority-list');
     const addTaskButton = document.getElementById('add-task-btn');
-    const themeToggleBtn = document.querySelector('.theme-toggle');
+    const settingsToggleBtn = document.querySelector('.settings-toggle');
+    const settingsPopup = document.getElementById('settings-popup');
+    const closeSettingsBtn = document.querySelector('.close-settings');
     const toggleDoneBtn = document.querySelector('.toggle-done');
     const priorityFilterBtn = document.querySelector('.priority-filter');
-    let typingTimeout;
+    const fontSelect = document.getElementById('font-select');
+    const dateCreatedToggle = document.getElementById('toggle-date-created');
+    const actionsToggle = document.getElementById('toggle-actions');
     let themeIndex = 0;
     const themes = ['', 'theme-light-brown', 'theme-dark-navy'];
     let toggleDoneState = 0; // 0: Show all tasks, 1: Hide done tasks, 2: Show only done tasks
     let priorityFilterState = false; // False: Show both lists, True: Show only priority list
 
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let longPressTimer;
-    let longPressActive = false;
+    let savedSettings = JSON.parse(localStorage.getItem('userSettings')) || {};
 
+    // Load saved settings
+    if (savedSettings.themeIndex !== undefined) {
+        themeIndex = savedSettings.themeIndex;
+        document.body.className = themes[themeIndex] + ' ' + (savedSettings.fontClass || 'font-arial');
+        fontSelect.value = savedSettings.fontClass || 'font-arial';
+        toggleColumnVisibility('date-created', savedSettings.showDateCreated !== false);
+        toggleColumnVisibility('action-column', savedSettings.showActions !== false);
+        dateCreatedToggle.checked = savedSettings.showDateCreated !== false;
+        actionsToggle.checked = savedSettings.showActions !== false;
+    }
+
+    settingsToggleBtn.addEventListener('click', () => {
+        settingsPopup.style.display = 'block';
+    });
+
+    closeSettingsBtn.addEventListener('click', () => {
+        settingsPopup.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == settingsPopup) {
+            settingsPopup.style.display = 'none';
+        }
+    });
+
+    fontSelect.addEventListener('change', () => {
+        document.body.className = fontSelect.value + ' ' + themes[themeIndex];
+        saveUserSettings();
+    });
+
+    dateCreatedToggle.addEventListener('change', () => {
+        toggleColumnVisibility('date-created', dateCreatedToggle.checked);
+        saveUserSettings();
+    });
+
+    actionsToggle.addEventListener('change', () => {
+        toggleColumnVisibility('action-column', actionsToggle.checked);
+        saveUserSettings();
+    });
+
+    const themeToggleBtn = document.querySelector('.theme-toggle');
     themeToggleBtn.addEventListener('click', () => {
         themeIndex = (themeIndex + 1) % themes.length;
-        document.body.className = themes[themeIndex];
-    });
-
-    toggleDoneBtn.addEventListener('mousedown', () => {
-        longPressTimer = setTimeout(() => {
-            longPressActive = true;
-            toggleDoneState = 2; // Show only done tasks
-            updateDoneButtonState();
-            renderTasks();
-        }, 500); // 500ms for long press detection
-    });
-
-    toggleDoneBtn.addEventListener('mouseup', () => {
-        clearTimeout(longPressTimer);
-        if (longPressActive) {
-            longPressActive = false;
-        }
+        document.body.className = themes[themeIndex] + ' ' + fontSelect.value;
+        saveUserSettings();
+        renderTasks(); // Re-render tasks to apply the correct status colors
     });
 
     toggleDoneBtn.addEventListener('click', () => {
-        if (longPressActive) {
-            // Prevent single click action if long press is active
-            return;
-        }
-        if (toggleDoneState === 2) {
-            toggleDoneState = 0; // Revert to default state
-        } else {
-            toggleDoneState = toggleDoneState === 1 ? 0 : 1; // Toggle between showing and hiding done tasks
-        }
+        toggleDoneState = (toggleDoneState + 1) % 3;
         updateDoneButtonState();
         renderTasks();
     });
@@ -77,9 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             taskTableContainer.style.display = 'block';
             addTaskButton.style.display = 'flex';
-            priorityListContainer.style.display = 'block';
+            priorityListContainer.style.display = 'block'; // Ensure the priority list is visible
         }
-        renderTasks(); // Re-render to reflect changes
+        renderTasks();
     }
 
     function saveTasks() {
@@ -90,9 +112,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function saveUserSettings() {
+        const userSettings = {
+            themeIndex: themeIndex,
+            fontClass: fontSelect.value,
+            showDateCreated: dateCreatedToggle.checked,
+            showActions: actionsToggle.checked,
+        };
+        localStorage.setItem('userSettings', JSON.stringify(userSettings));
+    }
+
+    function toggleColumnVisibility(columnClass, show) {
+        const elements = document.querySelectorAll(`.${columnClass}`);
+        elements.forEach(el => {
+            el.style.display = show ? '' : 'none';
+        });
+
+        adjustColumnWidths();
+    }
+
+    function adjustColumnWidths() {
+        const taskColumn = document.querySelector('.task-column');
+        const statusColumn = document.querySelector('.status-column');
+        const dateCreatedVisible = dateCreatedToggle.checked;
+        const actionsVisible = actionsToggle.checked;
+
+        taskColumn.style.width = dateCreatedVisible ? (actionsVisible ? '50%' : '65%') : (actionsVisible ? '60%' : '80%');
+        statusColumn.style.width = dateCreatedVisible || actionsVisible ? '25%' : '30%';
+    }
+
     function getStatusColor(status) {
         const currentTheme = document.body.className;
-        if (currentTheme === 'theme-dark-navy') {
+        if (currentTheme.includes('theme-dark-navy')) {
             switch (status) {
                 case 'Not started':
                     return '#cc6666'; // Muted red
@@ -123,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tasks.push(task);
         saveTasks();
         renderTasks();
-        // Automatically focus and select the new task text input
         const newTaskInput = taskTable.querySelector(`tr[data-id="${task.id}"] .task-text-input`);
         newTaskInput.focus();
     }
@@ -133,38 +183,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tasks.forEach((task, index) => {
             if (toggleDoneState === 1 && task.status === 'Done') {
-                return; // Hide done tasks
+                return;
             }
             if (toggleDoneState === 2 && task.status !== 'Done') {
-                return; // Show only done tasks
+                return;
             }
             if (priorityFilterState && !task.priority) {
-                return; // Show only priority tasks when filter is active
+                return;
             }
 
             const row = taskTable.insertRow();
             row.setAttribute('data-id', task.id);
+
+            const dateCreatedContent = `<td class="date-created date-created-column" style="text-align: center; ${dateCreatedToggle.checked ? '' : 'display: none;'}">${task.dateCreated}</td>`;
+
+            const actionContent = `<td class="action-column" style="text-align: center; ${actionsToggle.checked ? '' : 'display: none;'}">
+                                      <div class="action-wrapper">
+                                          <button class="priority-btn ${task.priority ? 'active' : ''}" data-index="${index}" ${task.status === 'Done' ? 'disabled' : ''}>🔥</button>
+                                          <button class="delete-btn" data-index="${index}">🗑️</button>
+                                      </div>
+                                   </td>`;
+
             row.innerHTML = `
-                <td>
+                <td class="task-column">
                     <input type="text" class="task-text-input ${task.text ? '' : 'placeholder'}" value="${task.text}" placeholder="New Task">
                 </td>
-                <td contenteditable="true" class="date-created">${task.dateCreated}</td>
-                <td>
+                ${dateCreatedContent}
+                <td class="status-column" style="text-align: center;">
                     <div class="status-box" data-index="${index}" style="background-color: ${getStatusColor(task.status)}" role="status" aria-live="polite">${task.status}</div>
                 </td>
-                <td>
-                    <button class="priority-btn ${task.priority ? 'active' : ''}" data-index="${index}" ${task.status === 'Done' ? 'disabled' : ''}>🔥</button>
-                    <button class="delete-btn" data-index="${index}">🗑️</button>
-                </td>
+                ${actionContent}
             `;
 
-            // Attach event listeners for placeholder behavior
             const taskTextInput = row.querySelector('.task-text-input');
             taskTextInput.addEventListener('focus', handleFocus);
             taskTextInput.addEventListener('blur', handleBlur);
         });
 
         renderPriorityTasks();
+        adjustColumnWidths();
     }
 
     function renderPriorityTasks() {
@@ -175,99 +232,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (priorityTasks.length === 0) {
             priorityList.innerHTML = '<li class="no-priority-tasks">No priority tasks</li>';
         } else {
-            priorityTasks.forEach(task => {
+            priorityTasks.forEach((task) => {
                 const listItem = document.createElement('li');
                 listItem.setAttribute('data-id', task.id);
+                listItem.style.display = 'flex';
+                listItem.style.justifyContent = 'space-between';
+                listItem.style.alignItems = 'center';
                 listItem.innerHTML = `
-                    ${task.text}
+                    <span>${task.text}</span>
                     <span class="priority-controls">
-                        <button class="drag-btn" data-id="${task.id}" aria-label="Drag to reorder">↕️</button>
                         <button class="remove-priority-btn" data-id="${task.id}" aria-label="Remove priority">✂️</button>
                     </span>
                 `;
                 priorityList.appendChild(listItem);
             });
         }
-
-        addDragAndDropHandlers(priorityList, 'li', true);
-    }
-
-    function addDragAndDropHandlers(container, childSelector, isVerticalOnly) {
-        const listItems = container.querySelectorAll(childSelector);
-
-        listItems.forEach(item => {
-            const dragHandle = item.querySelector('.drag-btn');
-            dragHandle.addEventListener('mousedown', (e) => {
-                item.setAttribute('draggable', 'true');
-            });
-            dragHandle.addEventListener('mouseup', (e) => {
-                item.removeAttribute('draggable');
-            });
-
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragover', e => handleDragOver(e, isVerticalOnly));
-            item.addEventListener('drop', handleDrop);
-            item.addEventListener('dragend', handleDragEnd);
-        });
-    }
-
-    function handleDragStart(e) {
-        e.target.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', e.target.getAttribute('data-id'));
-        e.dataTransfer.effectAllowed = 'move';
-    }
-
-    function handleDragOver(e, isVerticalOnly) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-
-        const afterElement = getDragAfterElement(e.currentTarget, e.clientY, isVerticalOnly);
-        const draggingItem = document.querySelector('.dragging');
-        
-        if (afterElement == null) {
-            e.currentTarget.appendChild(draggingItem);
-        } else {
-            e.currentTarget.insertBefore(draggingItem, afterElement);
-        }
-    }
-
-    function handleDrop(e) {
-        e.preventDefault();
-        const draggingItem = document.querySelector('.dragging');
-        const droppedItemId = e.dataTransfer.getData('text/plain');
-        const isPriorityList = e.currentTarget.id === 'priority-list';
-
-        const draggedIndex = tasks.findIndex(task => task.id === droppedItemId);
-        const droppedIndex = [...e.currentTarget.children].indexOf(draggingItem);
-
-        if (isPriorityList) {
-            const priorityTasks = tasks.filter(task => task.priority && task.status !== 'Done');
-            priorityTasks.splice(droppedIndex, 0, priorityTasks.splice(draggedIndex, 1)[0]);
-            priorityTasks.forEach((task, i) => {
-                tasks[tasks.findIndex(t => t.id === task.id)].priorityOrder = i;
-            });
-        }
-
-        saveTasks();
-        renderTasks();
-    }
-
-    function handleDragEnd(e) {
-        e.target.classList.remove('dragging');
-    }
-
-    function getDragAfterElement(container, y, isVerticalOnly) {
-        const draggableElements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
-
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
-            }
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     addTaskButton.addEventListener('click', () => {
@@ -344,9 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initial rendering with both lists shown by default
-    updatePriorityFilterState(); // Ensure the initial state shows both lists
-    renderTasks(); // Render the tasks to ensure both lists are populated correctly
+    updatePriorityFilterState();
+    renderTasks();
 });
 
 function handleFocus(e) {
