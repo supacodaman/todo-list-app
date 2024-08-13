@@ -5,6 +5,7 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
+    min-height: 100vh; /* Ensure background fills the screen */
 }
 
 /* Main container for the app */
@@ -85,7 +86,7 @@ table {
 }
 
 table, th, td {
-    border: 1px solid #ddd; /* Reintroduce borders to separate tasks */
+    border: 1px solid #ddd;
 }
 
 th, td {
@@ -98,23 +99,22 @@ th {
     background-color: #f4f4f4;
 }
 
-/* Centering for status header and date-created column */
 th.action-column, td.action-column {
-    width: 70px; /* Set a reasonable fixed width for the action column */
+    width: 70px;
     text-align: left;
 }
 
 th:not(.action-column), td:not(.action-column) {
-    width: auto; /* Allows these columns to expand */
+    width: auto;
 }
 
 th.date-created-column, td.date-created-column {
-    width: 15%; /* Set a reasonable width for the date created column */
+    width: 15%;
     text-align: center;
 }
 
 th.status-column, td.status-column {
-    width: 25%; /* Allocate more space for the status column */
+    width: 25%;
     text-align: center;
 }
 
@@ -143,18 +143,18 @@ td.action-column .action-wrapper {
 
 /* Priority button active state */
 .priority-btn.active {
-    background-color: #ffcc66; /* Subtle orange background */
+    background-color: #ffcc66;
     border-radius: 4px;
 }
 
 .theme-dark-navy .priority-btn.active {
-    background-color: #ffb84d; /* Slightly muted orange for navy theme */
+    background-color: #ffb84d;
 }
 
 /* Task status box styles */
 .status-box {
     cursor: pointer;
-    padding: 5px 5px;
+    padding: 5px;
     border-radius: 4px;
     text-align: center;
     color: #000000;
@@ -162,15 +162,15 @@ td.action-column .action-wrapper {
 }
 
 .theme-dark-navy .status-not-started {
-    background-color: #cc6666; /* Muted red for not started */
+    background-color: #cc6666;
 }
 
 .theme-dark-navy .status-working-on {
-    background-color: #ffcc66; /* Muted yellow for working on */
+    background-color: #ffcc66;
 }
 
 .theme-dark-navy .status-done {
-    background-color: #669966; /* Muted green for done */
+    background-color: #669966;
 }
 
 /* Unordered list styles */
@@ -236,8 +236,8 @@ li .status-box {
 .priority-controls {
     display: inline-flex;
     gap: 5px;
-    justify-content: flex-end; /* Ensure buttons are on the far right */
-    width: 100%; /* Make sure the buttons are aligned to the right */
+    justify-content: flex-end;
+    width: 100%;
 }
 
 .priority-controls button {
@@ -247,7 +247,7 @@ li .status-box {
     border-radius: 3px;
     padding: 2px 5px;
     color: #333;
-    font-size: 24px; /* Increased font size for the cutting icon */
+    font-size: 24px;
 }
 
 .priority-controls button:hover {
@@ -257,9 +257,8 @@ li .status-box {
 /* Mobile responsiveness */
 @media (max-width: 600px) {
     .container {
-        height: 100%;
-        width: 98%;
-        margin: 5px auto;
+        width: 100%;
+        margin: 0 auto;
         padding: 5px;
         box-sizing: border-box;
     }
@@ -287,6 +286,7 @@ li .status-box {
 
     .status-box {
         padding: 5px;
+        width: 100%; /* Ensure the status box takes up full width */
     }
 
     th.date-created-column, td.date-created-column {
@@ -308,6 +308,14 @@ li .status-box {
         font-size: 1.2em;
         padding: 4px;
     }
+
+    /* Full background color coverage */
+    body, .container {
+        background-color: #f4f4f4;
+        width: 100%;
+        height: 100%;
+        min-height: 100vh;
+    }
 }
 
 /* Theme light brown styles */
@@ -319,7 +327,7 @@ li .status-box {
 .theme-light-brown .settings-content {
     background-color: #f4e9d2;
     color: #333;
-    opacity: 1; /* Removed transparency */
+    opacity: 1;
 }
 
 .theme-light-brown th, .theme-light-brown td {
@@ -335,7 +343,7 @@ li .status-box {
     color: #333;
 }
 
-/* Light brown background for priority list tiles */
+/* Light brown  background for priority list tiles */
 .theme-light-brown .priority-controls button {
     background-color: #d3bda7;
     color: #5b3a29;
@@ -426,7 +434,7 @@ li .status-box {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay effect for the background only */
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .settings-content {
@@ -435,33 +443,33 @@ li .status-box {
     border: 1px solid #888;
     width: 80%;
     max-width: 400px;
-    background-color: #f0f0f0; /* Solid background color for non-navy themes */
+    background-color: #f0f0f0;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
 }
 
 .theme-dark-navy .settings-content {
-    background-color: #1b2a38; /* Dark navy background for settings */
-    color: #cfd8dc; /* Light gray font color for readability */
+    background-color: #1b2a38;
+    color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content h2 {
-    color: #cfd8dc; /* Matching light gray color for headings */
+    color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content ul li button,
 .theme-dark-navy .settings-content ul li select {
-    background-color: #2e3a45; /* Darker navy for buttons and select boxes */
-    color: #cfd8dc; /* Light gray font color */
+    background-color: #2e3a45;
+    color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content ul li button:hover,
 .theme-dark-navy .settings-content ul li select:hover {
-    background-color: #3b4a5a; /* Slightly lighter navy for hover states */
+    background-color: #3b4a5a;
 }
 
 .theme-dark-navy .settings-content ul li input[type="checkbox"] {
-    accent-color: #cfd8dc; /* Light gray for checkboxes */
+    accent-color: #cfd8dc;
 }
 
 .close-settings {
@@ -482,7 +490,7 @@ li .status-box {
 .settings-content h2 {
     margin-top: 0;
     text-align: center;
-    color: #333; /* Ensure consistent text color */
+    color: #333;
 }
 
 .settings-content ul {
@@ -492,7 +500,7 @@ li .status-box {
 
 .settings-content ul li {
     margin-bottom: 15px;
-    text-align: center; /* Center align the elements for consistency */
+    text-align: center;
 }
 
 .settings-content ul li button,
@@ -518,3 +526,4 @@ li .status-box {
     margin-right: 10px;
     vertical-align: middle;
 }
+```
