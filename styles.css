@@ -274,11 +274,11 @@ li .status-box {
     }
 
     body {
-        font-size: 14px;
+        font-size: 18px;
     }
 
     th, td {
-        font-size: 12px;
+        font-size: 16px;
         padding: 5px;
         height: 5px;
     }
@@ -291,7 +291,7 @@ li .status-box {
 
     li {
         padding: 10px;
-        font-size: 14px;
+        font-size: 18px;
     }
 
     .status-box {
