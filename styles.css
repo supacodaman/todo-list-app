@@ -319,6 +319,20 @@ li .status-box {
         justify-content: space-evenly;
     }
 
+    
+    .priority-btn, .delete-btn {
+        font-size: 0.8em; /* Slightly reduce the font size for mobile */
+        padding: 2px; /* Adjust padding to make the buttons fit side by side */
+        margin: 0 2px; /* Reduce margin to ensure buttons don't stack */
+    }
+
+    td.action-column .action-wrapper {
+        display: flex; /* Use flexbox to align buttons side by side */
+        justify-content: center; /* Center the buttons within the cell */
+        align-items: center; /* Vertically align the buttons */
+        gap: 4px; /* Add some space between the buttons */
+    }
+    
     /* Full background color coverage */
     body, .container {
         background-color: #f4f4f4;
