@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1, minimum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List App</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Ensure this points to your updated CSS file -->
 </head>
 <body class="font-arial"> <!-- Default font class -->
     <div class="container">
@@ -22,10 +22,12 @@
                         <th class="task-column" role="columnheader">Task</th>
                         <th class="date-created date-created-column" role="columnheader">Date Created</th>
                         <th class="status-column" role="columnheader">Status</th>
-                        <th class="action-column" role="columnheader">Action</th>
+                        <th class="action-column" role="columnheader">Action</th> <!-- Only visible on desktop -->
                     </tr>
                 </thead>
-                <tbody role="rowgroup"></tbody>
+                <tbody role="rowgroup">
+                    <!-- Task rows will be dynamically inserted here by JavaScript -->
+                </tbody>
             </table>
         </div>
         
@@ -59,13 +61,13 @@
                     <input type="checkbox" id="toggle-date-created" checked>
                 </li>
                 <li>
-                    <label for="toggle-actions">Show "Actions" Column:</label>
+                    <label for="toggle-actions">Show "Actions" Column (Desktop Only):</label>
                     <input type="checkbox" id="toggle-actions" checked>
                 </li>
             </ul>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js"></script> <!-- Ensure this points to your updated JavaScript file -->
 </body>
 </html>
