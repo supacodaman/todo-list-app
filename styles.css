@@ -5,7 +5,7 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
-    min-height: 100vh; /* Ensure background fills the screen */
+    min-height: 100vh;
 }
 
 /* Main container for the app */
@@ -71,6 +71,7 @@ h1, h2 {
     border: none;
     border-radius: 50%;
     transition: background-color 0.3s ease;
+    z-index: 10; /* Ensure it's on top */
 }
 
 .add-task-btn:hover {
@@ -115,26 +116,26 @@ th.date-created-column, td.date-created-column {
 }
 
 th.status-column, td.status-column {
-    width: 25%; /* Adjust as necessary to fit your layout */
-    padding: 0; /* Ensure no padding in the cell */
-    margin: 0; /* No margin to prevent overflow */
+    width: 25%;
+    padding: 0;
+    margin: 0;
     text-align: center;
-    box-sizing: border-box; /* Ensure padding and borders are included in the width/height */
-    overflow: hidden; /* Prevents overflow */
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 /* Task status box styles */
 .status-box {
-    display: flex; /* Allows for vertical centering using flexbox */
+    display: flex;
     justify-content: center;
-    align-items: center; /* Vertically centers the text */
-    width: 100%; /* Ensures it takes the full width of the cell */
-    height: 100%; /* Ensures it fills the cell vertically */
-    margin: 0; /* Removes margin to prevent overflow */
-    padding: 0; /* Removes internal padding */
-    border-radius: 0; /* Removes rounded edges */
-    box-sizing: border-box; /* Ensures padding and borders are included in the width/height */
-    overflow: hidden; /* Prevents overflow */
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    box-sizing: border-box;
+    overflow: hidden;
     text-align: center;
     color: #000000;
 }
@@ -160,17 +161,17 @@ th.status-column, td.status-column {
 }
 
 .prioritize-btn {
-    color: #ffa500; /* Orange for prioritize */
+    color: #ffa500;
 }
 
 .delete-btn {
-    color: red; /* Red for delete */
+    color: red;
 }
 
 /* Task row styles */
 .task-row {
     position: relative;
-    overflow: hidden; /* Ensures buttons are hidden until swiped */
+    overflow: hidden;
 }
 
 /* Unordered list styles */
@@ -286,17 +287,17 @@ li .status-box {
 
     .status-box {
         padding: 5px;
-        width: 100%; /* Ensure the status box takes up full width */
+        width: 100%;
     }
 
     th.date-created-column, td.date-created-column {
         width: auto;
-        min-width: 76px; /* Adjust to fit the "MMM-DD" format comfortably */
+        min-width: 76px;
         text-align: center;
     }
 
     th.action-column, td.action-column {
-        display: none; /* Hide action column on mobile */
+        display: none;
     }
 
     td.action-column {
@@ -306,14 +307,6 @@ li .status-box {
     .priority-btn, .delete-btn {
         font-size: 1.2em;
         padding: 4px;
-    }
-
-    /* Full background color coverage */
-    body, .container {
-        background-color: #f4f4f4;
-        width: 100%;
-        height: 100%;
-        min-height: 100vh;
     }
 
     .swipe-buttons {
@@ -361,174 +354,176 @@ li .status-box {
 /* Light brown background for priority list tiles */
 .theme-light-brown .priority-controls button {
     background-color: #d3bda7;
-color: #5b3a29;
+    color: #5b3a29;
 }
 
 .theme-light-brown li {
-background-color: #f4e9d2;
-border-color: #d3bda7;
+    background-color: #f4e9d2;
+    border-color: #d3bda7;
 }
 
 /* Theme dark navy styles */
 .theme-dark-navy .container, .theme-dark-navy table, .theme-dark-navy ul {
-background-color: #001f3f;
-color: #fff;
+    background-color: #001f3f;
+    color: #fff;
 }
 
 .theme-dark-navy .settings-content {
-background-color: #1b2a38;
-color: #cfd8dc;
+    background-color: #1b2a38;
+    color: #cfd8dc;
 }
 
 .theme-dark-navy th {
-background-color: #003366;
-color: #fff;
+    background-color: #003366;
+    color: #fff;
 }
 
 .theme-dark-navy th, .theme-dark-navy td {
-border-color: #555;
+    border-color: #555;
 }
 
 .theme-dark-navy h1, .theme-dark-navy h2 {
-color: #b0c4de;
+    color: #b0c4de;
 }
 
 /* Dark navy background for priority list tiles */
 .theme-dark-navy .priority-controls button {
-background-color: #2e3a45;
-color: #cfd8dc;
+    background-color: #2e3a45;
+    color: #cfd8dc;
 }
 
 .theme-dark-navy li {
-background-color: #1b2a38;
-border-color: #2e3a45;
+    background-color: #1b2a38;
+    border-color: #2e3a45;
 }
 
 .theme-dark-navy .priority-controls button:hover {
-background-color: #777;
+    background-color: #777;
 }
 
 /* Placeholder styling */
 .placeholder::placeholder {
-color: lightgrey;
+    color: lightgrey;
 }
 
 /* Style the input element to blend with the table cell */
 .task-text-input {
-border: none;
-background: transparent;
-width: 100%;
-padding: 8px;
-font-family: inherit;
-font-size: inherit;
-color: inherit;
-box-sizing: border-box;
+    border: none;
+    background: transparent;
+    width: 100%;
+    padding: 8px;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    box-sizing: border-box;
 }
 
 /* Remove outline on focus */
 .task-text-input:focus {
-outline: none;
+    outline: none;
 }
 
 /* Settings Popup Styles */
 .settings-popup {
-display: none;
-position: fixed;
-z-index: 1000;
-left: 0;
-top: 0;
-width: 100%;
-height: 100%;
-overflow: auto;
-background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .settings-content {
-margin: 15% auto;
-padding: 20px;
-border: 1px solid #888;
-width: 80%;
-max-width: 400px;
-background-color: #f0f0f0;
-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-border-radius: 8px;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    background-color: #f0f0f0;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
 }
 
 .theme-dark-navy .settings-content {
-background-color: #1b2a38;
-color: #cfd8dc;
+    background-color: #1b2a38;
+    color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content h2 {
-color: #cfd8dc;
+    color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content ul li button,
 .theme-dark-navy .settings-content ul li select {
-background-color: #2e3a45;
-color: #cfd8dc;
+    background-color: #2e3a45;
+    color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content ul li button:hover,
 .theme-dark-navy .settings-content ul li select:hover {
-background-color: #3b4a5a;
+    background-color: #3b4a5a;
 }
 
-.theme-dark-navy .settings-content ul li input[type=“checkbox”] {
-accent-color: #cfd8dc;
+.theme-dark-navy .settings-content ul li input[type="checkbox"] {
+    accent-color: #cfd8dc;
 }
 
 .close-settings {
-color: #aaa;
-float: right;
-font-size: 28px;
-font-weight: bold;
-cursor: pointer;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .close-settings:hover,
 .close-settings:focus {
-color: black;
-text-decoration: none;
-cursor: pointer;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .settings-content h2 {
-margin-top: 0;
-text-align: center;
-color: #333;
+    margin-top: 0;
+    text-align: center;
+    color: #333;
 }
 
 .settings-content ul {
-list-style: none;
-padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 .settings-content ul li {
-margin-bottom: 15px;
-text-align: center;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .settings-content ul li button,
 .settings-content ul li select {
-width: 100%;
-padding: 10px;
-font-size: 16px;
-cursor: pointer;
-background-color: #6c757d;
-color: #fff;
-border: none;
-border-radius: 4px;
-transition: background-color 0.3s ease;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
 .settings-content ul li button:hover,
 .settings-content ul li select:hover {
-background-color: #5a6268;
+    background-color: #5a6268;
 }
 
-.settings-content ul li input[type=“checkbox”] {
-margin-left: 0;
-margin-right: 10px;
-vertical-align: middle;
+.settings-content ul li input[type="checkbox"] {
+    margin-left: 0;
+    margin-right: 10px;
+    vertical-align: middle;
 }
+```
+
