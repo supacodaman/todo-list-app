@@ -1,3 +1,6 @@
+#### Updated JavaScript:
+
+```javascript
 document.addEventListener('DOMContentLoaded', () => {
     const taskTableContainer = document.querySelector('.task-table-container');
     const priorityListContainer = document.querySelector('.priority-list-container');
@@ -14,13 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const actionsToggle = document.getElementById('toggle-actions');
     let themeIndex = 0;
     const themes = ['', 'theme-light-brown', 'theme-dark-navy'];
-    let toggleDoneState = 0; // 0: Show all tasks, 1: Hide done tasks, 2: Show only done tasks
-    let priorityFilterState = false; // False: Show both lists, True: Show only priority list
+    let toggleDoneState = 0;
+    let priorityFilterState = false;
 
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let savedSettings = JSON.parse(localStorage.getItem('userSettings')) || {};
 
-    // Load saved settings
     if (savedSettings.themeIndex !== undefined) {
         themeIndex = savedSettings.themeIndex;
         document.body.className = themes[themeIndex] + ' ' + (savedSettings.fontClass || 'font-arial');
@@ -65,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         themeIndex = (themeIndex + 1) % themes.length;
         document.body.className = themes[themeIndex] + ' ' + fontSelect.value;
         saveUserSettings();
-        renderTasks(); // Re-render tasks to apply the correct status colors
+        renderTasks();
     });
 
     toggleDoneBtn.addEventListener('click', () => {
@@ -99,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             taskTableContainer.style.display = 'block';
             addTaskButton.style.display = 'flex';
-            priorityListContainer.style.display = 'block'; // Ensure the priority list is visible
+            priorityListContainer.style.display = 'block';
         }
         renderTasks();
     }
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userSettings = {
             themeIndex: themeIndex,
             fontClass: fontSelect.value,
-                        showDateCreated: dateCreatedToggle.checked,
+            showDateCreated: dateCreatedToggle.checked,
             showActions: actionsToggle.checked,
         };
         localStorage.setItem('userSettings', JSON.stringify(userSettings));
@@ -146,13 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentTheme.includes('theme-dark-navy')) {
             switch (status) {
                 case 'Not started':
-                    return '#cc6666'; // Muted red
+                    return '#cc6666';
                 case 'Working on':
-                    return '#ffcc66'; // Muted yellow
+                    return '#ffcc66';
                 case 'Done':
-                    return '#669966'; // Muted green
+                    return '#669966';
                 default:
-                    return '#cc6666'; // Default muted red
+                    return '#cc6666';
             }
         } else {
             switch (status) {
@@ -263,10 +265,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const swipeDistance = startX - endX;
 
         if (swipeDistance > 50) {
-            // User swiped left to reveal delete button
             row.querySelector('.swipe-buttons').style.transform = 'translateX(-100%)';
         } else if (swipeDistance < -50) {
-            // User swiped right to reveal prioritize button
             row.querySelector('.swipe-buttons').style.transform = 'translateX(0)';
         }
     }
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    addTaskButton.addEventListener('click', () => {
+    addTaskButton.addEventListener('click', () =>  {
         addTask();
     });
 
@@ -382,19 +382,20 @@ function handleFocus(e) {
 
 function handleBlur(e) {
     if (!e.target.value.trim()) {
-e.target.value = ‘’;
-e.target.classList.add(‘placeholder’);
-}
+        e.target.value = '';
+        e.target.classList.add('placeholder');
+    }
 }
 
 function debounce(func, wait) {
-let timeout;
-return function(…args) {
-const later = () => {
-clearTimeout(timeout);
-func(…args);
-};
-clearTimeout(timeout);
-timeout = setTimeout(later, wait);
-};
+    let timeout;
+    return function(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
+```
