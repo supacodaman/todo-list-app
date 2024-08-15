@@ -86,7 +86,8 @@ table {
 }
 
 table, th, td {
-    border: 1px solid #ddd;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
 th, td {
@@ -111,12 +112,14 @@ th:not(.action-column), td:not(.action-column) {
 th.date-created-column, td.date-created-column {
     width: 15%;
     text-align: center;
+        min-width: 76px; /* Adjust to fit the "MMM-DD" format comfortably */
 }
 
 th.status-column, td.status-column {
     width: 25%; /* Adjust as necessary to fit your layout */
     padding: 0; /* Ensure no padding in the cell */
     margin: 0; /* No margin to prevent overflow */
+    height: 100%
     text-align: center;
     box-sizing: border-box; /* Ensure padding and borders are included in the width/height */
     overflow: hidden; /* Prevents overflow */
