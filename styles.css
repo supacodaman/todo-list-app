@@ -86,8 +86,7 @@ table {
 }
 
 table, th, td {
-    border-collapse: collapse;
-    border-spacing: 0;
+    border: 1px solid #ddd;
 }
 
 th, td {
@@ -111,51 +110,17 @@ th:not(.action-column), td:not(.action-column) {
 
 th.date-created-column, td.date-created-column {
     width: 15%;
+    min-width: 80px;
     text-align: center;
-        min-width: 76px; /* Adjust to fit the "MMM-DD" format comfortably */
 }
 
 th.status-column, td.status-column {
     width: 25%; /* Adjust as necessary to fit your layout */
     padding: 0; /* Ensure no padding in the cell */
     margin: 0; /* No margin to prevent overflow */
-    height: 100%
     text-align: center;
     box-sizing: border-box; /* Ensure padding and borders are included in the width/height */
     overflow: hidden; /* Prevents overflow */
-}
-
-/* Action column styles */
-td.action-column .action-wrapper {
-    display: inline-block;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.priority-btn, .delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 4px;
-    margin: 2px;
-    color: #333;
-}
-
-/* Hover effects */
-.priority-btn:hover, .delete-btn:hover {
-    background-color: #f0f0f0;
-    border-radius: 4px;
-}
-
-/* Priority button active state */
-.priority-btn.active {
-    background-color: #ffcc66;
-    border-radius: 4px;
-}
-
-.theme-dark-navy .priority-btn.active {
-    background-color: #ffb84d;
 }
 
 /* Task status box styles */
@@ -174,16 +139,38 @@ td.action-column .action-wrapper {
     color: #000000;
 }
 
-.theme-dark-navy .status-not-started {
-    background-color: #cc6666;
+/* Mobile swipe buttons */
+.swipe-buttons {
+    display: flex;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    background-color: #f0f0f0;
 }
 
-.theme-dark-navy .status-working-on {
-    background-color: #ffcc66;
+.action-btn {
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    background: none;
+    cursor: pointer;
 }
 
-.theme-dark-navy .status-done {
-    background-color: #669966;
+.prioritize-btn {
+    color: #ffa500; /* Orange for prioritize */
+}
+
+.delete-btn {
+    color: red; /* Red for delete */
+}
+
+/* Task row styles */
+.task-row {
+    position: relative;
+    overflow: hidden; /* Ensures buttons are hidden until swiped */
 }
 
 /* Unordered list styles */
@@ -298,41 +285,29 @@ li .status-box {
     }
 
     .status-box {
-        font-size: 0; /* Hide text by setting font size to 0 */
-        line-height: 24px; /* Maintain vertical centering */
-        height: 24px; /* Ensure it remains visible as a color box */
+        padding: 5px;
         width: 100%; /* Ensure the status box takes up full width */
     }
 
     th.date-created-column, td.date-created-column {
         width: auto;
+        min-width: 76px; /* Adjust to fit the "MMM-DD" format comfortably */
         text-align: center;
     }
 
     th.action-column, td.action-column {
-        width: 70px;
-        text-align: center;
-        padding: 4px;
+        display: none; /* Hide action column on mobile */
     }
 
     td.action-column {
         justify-content: space-evenly;
     }
 
-    
     .priority-btn, .delete-btn {
-        font-size: 0.8em; /* Slightly reduce the font size for mobile */
-        padding: 2px; /* Adjust padding to make the buttons fit side by side */
-        margin: 0 2px; /* Reduce margin to ensure buttons don't stack */
+        font-size: 1.2em;
+        padding: 4px;
     }
 
-    td.action-column .action-wrapper {
-        display: flex; /* Use flexbox to align buttons side by side */
-        justify-content: center; /* Center the buttons within the cell */
-        align-items: center; /* Vertically align the buttons */
-        gap: 4px; /* Add some space between the buttons */
-    }
-    
     /* Full background color coverage */
     body, .container {
         background-color: #f4f4f4;
@@ -341,19 +316,20 @@ li .status-box {
         min-height: 100vh;
     }
 
-    /* Smaller task text and fill box vertically */
-    .task-text-input {
-        font-size: 1.2em;
+    .swipe-buttons {
+        display: flex;
+        justify-content: flex-end;
         height: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
     }
 
-    /* When the text exceeds the width, shrink text instead of scrolling */
-    .task-text-input:focus {
-        font-size: 1em; /* Reduce the font size when focused */
+    .task-row {
+        position: relative;
+        overflow: hidden;
     }
 }
 
@@ -385,184 +361,174 @@ li .status-box {
 /* Light brown background for priority list tiles */
 .theme-light-brown .priority-controls button {
     background-color: #d3bda7;
-    color: #5b3a29;
+color: #5b3a29;
 }
 
 .theme-light-brown li {
-    background-color: #f4e9d2;
-    border-color: #d3bda7;
+background-color: #f4e9d2;
+border-color: #d3bda7;
 }
 
 /* Theme dark navy styles */
 .theme-dark-navy .container, .theme-dark-navy table, .theme-dark-navy ul {
-    background-color: #001f3f;
-    color: #fff;
+background-color: #001f3f;
+color: #fff;
 }
 
 .theme-dark-navy .settings-content {
-    background-color: #1b2a38;
-    color: #cfd8dc;
+background-color: #1b2a38;
+color: #cfd8dc;
 }
 
 .theme-dark-navy th {
-    background-color: #003366;
-    color: #fff;
+background-color: #003366;
+color: #fff;
 }
 
 .theme-dark-navy th, .theme-dark-navy td {
-    border-color: #555;
+border-color: #555;
 }
 
 .theme-dark-navy h1, .theme-dark-navy h2 {
-    color: #b0c4de;
+color: #b0c4de;
 }
 
 /* Dark navy background for priority list tiles */
 .theme-dark-navy .priority-controls button {
-    background-color: #2e3a45;
-    color: #cfd8dc;
+background-color: #2e3a45;
+color: #cfd8dc;
 }
 
 .theme-dark-navy li {
-    background-color: #1b2a38;
-    border-color: #2e3a45;
+background-color: #1b2a38;
+border-color: #2e3a45;
 }
 
 .theme-dark-navy .priority-controls button:hover {
-    background-color: #777;
+background-color: #777;
 }
 
 /* Placeholder styling */
 .placeholder::placeholder {
-    color: lightgrey;
+color: lightgrey;
 }
 
 /* Style the input element to blend with the table cell */
 .task-text-input {
-    border: none;
-    background: transparent;
-    width: 100%;
-    padding: 8px;
-    font-family: inherit;
-    font-size: inherit;
-    color: inherit;
-    box-sizing: border-box;
+border: none;
+background: transparent;
+width: 100%;
+padding: 8px;
+font-family: inherit;
+font-size: inherit;
+color: inherit;
+box-sizing: border-box;
 }
 
 /* Remove outline on focus */
 .task-text-input:focus {
-    outline: none;
-}
-
-/* Add these styles to hide elements when the priority filter is active */
-.task-table-container {
-    display: block;
-}
-
-.priority-list-container {
-    display: none;
+outline: none;
 }
 
 /* Settings Popup Styles */
 .settings-popup {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+display: none;
+position: fixed;
+z-index: 1000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0, 0, 0, 0.4);
 }
 
 .settings-content {
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-    background-color: #f0f0f0;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
+margin: 15% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 80%;
+max-width: 400px;
+background-color: #f0f0f0;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+border-radius: 8px;
 }
 
 .theme-dark-navy .settings-content {
-    background-color: #1b2a38;
-    color: #cfd8dc;
+background-color: #1b2a38;
+color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content h2 {
-    color: #cfd8dc;
+color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content ul li button,
 .theme-dark-navy .settings-content ul li select {
-    background-color: #2e3a45;
-    color: #cfd8dc;
+background-color: #2e3a45;
+color: #cfd8dc;
 }
 
 .theme-dark-navy .settings-content ul li button:hover,
 .theme-dark-navy .settings-content ul li select:hover {
-    background-color: #3b4a5a;
+background-color: #3b4a5a;
 }
 
-.theme-dark-navy .settings-content ul li input[type="checkbox"] {
-    accent-color: #cfd8dc;
+.theme-dark-navy .settings-content ul li input[type=“checkbox”] {
+accent-color: #cfd8dc;
 }
 
 .close-settings {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
 }
 
 .close-settings:hover,
 .close-settings:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+color: black;
+text-decoration: none;
+cursor: pointer;
 }
 
 .settings-content h2 {
-    margin-top: 0;
-    text-align: center;
-    color: #333;
+margin-top: 0;
+text-align: center;
+color: #333;
 }
 
 .settings-content ul {
-    list-style: none;
-    padding: 0;
+list-style: none;
+padding: 0;
 }
 
 .settings-content ul li {
-    margin-bottom: 15px;
-    text-align: center;
+margin-bottom: 15px;
+text-align: center;
 }
 
 .settings-content ul li button,
 .settings-content ul li select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #6c757d;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+width: 100%;
+padding: 10px;
+font-size: 16px;
+cursor: pointer;
+background-color: #6c757d;
+color: #fff;
+border: none;
+border-radius: 4px;
+transition: background-color 0.3s ease;
 }
 
 .settings-content ul li button:hover,
 .settings-content ul li select:hover {
-    background-color: #5a6268;
+background-color: #5a6268;
 }
 
-.settings-content ul li input[type="checkbox"] {
-    margin-left: 0;
-    margin-right: 10px;
-    vertical-align: middle;
+.settings-content ul li input[type=“checkbox”] {
+margin-left: 0;
+margin-right: 10px;
+vertical-align: middle;
 }
-```
