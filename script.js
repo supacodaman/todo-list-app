@@ -1,6 +1,3 @@
-#### Updated JavaScript:
-
-```javascript
 document.addEventListener('DOMContentLoaded', () => {
     const taskTableContainer = document.querySelector('.task-table-container');
     const priorityListContainer = document.querySelector('.priority-list-container');
@@ -20,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let toggleDoneState = 0;
     let priorityFilterState = false;
 
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let savedSettings = JSON.parse(localStorage.getItem('userSettings')) || {};
+    let tasks = loadTasksFromStorage();
+    let savedSettings = loadUserSettings();
 
     if (savedSettings.themeIndex !== undefined) {
         themeIndex = savedSettings.themeIndex;
@@ -176,15 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
         tasks.push(task);
         saveTasks();
         renderTasks();
-        const newTaskInput = taskTable.querySelector(`tr[data-id="${task.id}"] .task-text-input`);
-        newTaskInput.focus();
+        focusNewTask(task.id);
     }
 
     function renderTasks() {
         taskTable.innerHTML = '';
         const isMobile = window.innerWidth <= 600;
 
-        tasks.forEach((task, index) => {
+        tasks.forEach((task) => {
             if (toggleDoneState === 1 && task.status === 'Done') {
                 return;
             }
@@ -197,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const row = taskTable.insertRow();
             row.setAttribute('data-id', task.id);
+            row.classList.add('task-row');
 
             let dateCreatedContent = task.dateCreated;
             if (isMobile) {
@@ -204,30 +201,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 dateCreatedContent = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             }
 
-            const dateCreatedColumn = `<td class="date-created date-created-column" style="text-align: center; ${dateCreatedToggle.checked ? '' : 'display: none;'}">${dateCreatedContent}</td>`;
-
-            const actionContent = isMobile ? `
-                <div class="swipe-buttons">
-                    <button class="action-btn prioritize-btn" data-index="${index}">⭐</button>
-                    <button class="action-btn delete-btn" data-index="${index}">🗑️</button>
-                </div>
-            ` : `
-                <td class="action-column" style="text-align: center; ${actionsToggle.checked ? '' : 'display: none;'}">
-                    <div class="action-wrapper">
-                        <button class="priority-btn ${task.priority ? 'active' : ''}" data-index="${index}" ${task.status === 'Done' ? 'disabled' : ''}>🔥</button>
-                        <button class="delete-btn" data-index="${index}">🗑️</button>
-                    </div>
-                </td>
-            `;
-
             row.innerHTML = `
                 <td class="task-column">
                     <input type="text" class="task-text-input ${task.text ? '' : 'placeholder'}" value="${task.text}" placeholder="New Task">
-                    ${actionContent}
                 </td>
-                ${dateCreatedColumn}
+                <td class="date-created date-created-column" style="text-align: center; ${dateCreatedToggle.checked ? '' : 'display: none;'}">${dateCreatedContent}</td>
                 <td class="status-column" style="text-align: center;">
-                    <div class="status-box" data-index="${index}" style="background-color: ${getStatusColor(task.status)}" role="status" aria-live="polite"></div>
+                    <div class="status-box" data-id="${task.id}" style="background-color: ${getStatusColor(task.status)}" role="status" aria-live="polite"></div>
+                </td>
+                <td class="action-column" style="text-align: center; ${actionsToggle.checked ? '' : 'display: none;'}">
+                    <div class="action-wrapper">
+                        <button class="priority-btn ${task.priority ? 'active' : ''}" data-id="${task.id}" ${task.status === 'Done' ? 'disabled' : ''}>🔥</button>
+                        <button class="delete-btn" data-id="${task.id}">🗑️</button>
+                    </div>
                 </td>
             `;
 
@@ -235,9 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setupSwipeGestures(row);
             }
 
-            const taskTextInput = row.querySelector('.task-text-input');
-            taskTextInput.addEventListener('focus', handleFocus);
-            taskTextInput.addEventListener('blur', handleBlur);
+            attachEventListeners(row, task.id);
         });
 
         renderPriorityTasks();
@@ -296,106 +280,96 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    addTaskButton.addEventListener('click', () =>  {
-        addTask();
-    });
+    function focusNewTask(taskId) {
+        const newTaskInput = taskTable.querySelector(`tr[data-id="${taskId}"] .task-text-input`);
+        newTaskInput.focus();
+    }
 
-    taskTable.addEventListener('input', debounce((e) => {
-        const index = e.target.closest('tr').rowIndex - 1;
-        if (e.target.classList.contains('task-text-input')) {
-            tasks[index].text = e.target.value.trim();
-            if (!tasks[index].text) {
-                e.target.classList.add('placeholder');
-            } else {
-                e.target.classList.remove('placeholder');
-            }
+    function attachEventListeners(row, taskId) {
+        row.querySelector('.task-text-input').addEventListener('input', debounce((e) => {
+            const task = tasks.find(t => t.id === taskId);
+            task.text = e.target.value.trim();
             saveTasks();
             renderPriorityTasks();
-        } else if (e.target.classList.contains('date-created')) {
-            tasks[index].dateCreated = e.target.textContent.trim();
-            saveTasks();
-            renderTasks();
-        }
-    }, 300));
+        }, 300));
 
-    taskTable.addEventListener('click', (e) => {
-        const index = e.target.getAttribute('data-index');
-        if (e.target.classList.contains('delete-btn')) {
-            tasks.splice(index, 1);
-            saveTasks();
-            renderTasks();
-        } else if (e.target.classList.contains('status-box')) {
-            const task = tasks[index];
-            const currentStatus = task.status;
-            let newStatus;
-            switch (currentStatus) {
-                case 'Not started':
-                    newStatus = 'Working on';
-                    break;
-                case 'Working on':
-                    newStatus = 'Done';
-                    break;
-                case 'Done':
-                    newStatus = 'Not started';
-                    break;
-                default:
-                    newStatus = 'Not started';
-                    break;
-            }
-            task.status = newStatus;
-            if (newStatus === 'Done') {
+        row.querySelector('.status-box').addEventListener('click', () => {
+            const task = tasks.find(t => t.id === taskId);
+            task.status = cycleStatus(task.status);
+            if (task.status === 'Done') {
                 task.priority = false;
             }
             saveTasks();
             renderTasks();
-        } else if (e.target.classList.contains('priority-btn')) {
-            const task = tasks[index];
-            if (task.status !== 'Done') {
-                task.priority = !task.priority;
-                saveTasks();
-                renderTasks();
-            }
-        }
-    });
+        });
 
-    priorityList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-priority-btn')) {
-            const taskId = e.target.getAttribute('data-id');
-            const task = tasks.find(task => task.id === taskId);
-            if (task) {
-                task.priority = false;
+        if (row.querySelector('.priority-btn')) {
+            row.querySelector('.priority-btn').addEventListener('click', () => {
+                const task = tasks.find(t => t.id === taskId);
+                if (task.status !== 'Done') {
+                    task.priority = !task.priority;
+                    saveTasks();
+                    renderTasks();
+                }
+            });
+        }
+
+        if (row.querySelector('.delete-btn')) {
+            row.querySelector('.delete-btn').addEventListener('click', () => {
+                tasks = tasks.filter(t => t.id !== taskId);
                 saveTasks();
                 renderTasks();
-            }
+            });
         }
+    }
+
+    function cycleStatus(status) {
+        switch (status) {
+            case 'Not started':
+                return 'Working on';
+            case 'Working on':
+                return 'Done';
+            case 'Done':
+                return 'Not started';
+            default:
+                return 'Not started';
+        }
+    }
+
+    function loadTasksFromStorage() {
+        try {
+            return JSON.parse(localStorage.getItem('tasks')) || [];
+        } catch (e) {
+            console.error('Could not load tasks from storage', e);
+            return [];
+        }
+    }
+
+    function loadUserSettings() {
+        try {
+            return JSON.parse(localStorage.getItem('userSettings')) || {};
+        } catch (e) {
+            console.error('Could not load user settings', e);
+            return {};
+        }
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    addTaskButton.addEventListener('click', () => {
+        addTask();
     });
 
     updatePriorityFilterState();
     renderTasks();
 });
-
-function handleFocus(e) {
-    if (e.target.value === '') {
-        e.target.classList.remove('placeholder');
-    }
-}
-
-function handleBlur(e) {
-    if (!e.target.value.trim()) {
-        e.target.value = '';
-        e.target.classList.add('placeholder');
-    }
-}
-
-function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-```
