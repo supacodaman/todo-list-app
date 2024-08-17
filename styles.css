@@ -101,7 +101,7 @@ th {
 }
 
 th.action-column, td.action-column {
-    width: auto;
+    width: 15%;
     text-align: center;
 }
 
@@ -525,5 +525,3 @@ li .status-box {
     margin-right: 10px;
     vertical-align: middle;
 }
-```
-
