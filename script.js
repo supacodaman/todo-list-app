@@ -192,6 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isMobile) {
                 const date = new Date(task.dateCreated);
                 dateCreatedContent = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).replace(' ', '-');
+            } else {
+                dateCreatedContent = task.dateCreated; // YYYY-MM-DD for desktop mode
             }
 
             row.innerHTML = `
@@ -199,10 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="text" class="task-text-input ${task.text ? '' : 'placeholder'}" value="${task.text}" placeholder="New Task">
                 </td>
                 <td class="date-created date-created-column" style="text-align: center; ${dateCreatedToggle.checked ? '' : 'display: none;'}">
-                    <input type="text" class="date-created-input" value="${formatDateForDisplay(task.dateCreated)}" maxlength="6">
+                    <input type="text" class="date-created-input" value="${dateCreatedContent}" maxlength="10">
                 </td>
                 <td class="status-column" style="text-align: center;">
-                    <div class="status-box ${getStatusColor(task.status)}" data-id="${task.id}" role="status" aria-live="polite">${task.status}</div>
+                    <div class="status-box ${getStatusColor(task.status)}" data-id="${task.id}" role="status" aria-live="polite">${isMobile ? '' : task.status}</div>
                 </td>
                 <td class="action-column" style="text-align: center; ${actionsToggle.checked ? '' : 'display: none;'}">
                     <div class="action-wrapper">
@@ -290,7 +292,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         row.querySelector('.date-created-input').addEventListener('input', (e) => {
             const task = tasks.find(t => t.id === taskId);
-            task.dateCreated = formatDateForStorage(e.target.value);
+            const inputDate = e.target.value.trim();
+            if (isValidDate(inputDate)) {
+                task.dateCreated = formatDateForStorage(inputDate);
+            } else {
+                task.dateCreated = new Date().toISOString().split('T')[0]; // Replace with today's date
+            }
             saveTasks();
             renderTasks();
         });
@@ -336,6 +343,10 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 return 'Not started';
         }
+    }
+
+    function isValidDate(date) {
+        return !isNaN(Date.parse(date));
     }
 
     function formatDateForDisplay(date) {
