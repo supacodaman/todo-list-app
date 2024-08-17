@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fontSelect = document.getElementById('font-select');
     const dateCreatedToggle = document.getElementById('toggle-date-created');
     const actionsToggle = document.getElementById('toggle-actions');
+    const listTitle = document.getElementById('list-title');
     let themeIndex = 0;
     const themes = ['', 'theme-light-brown', 'theme-dark-navy'];
     let toggleDoneState = 0;
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleColumnVisibility('action-column', savedSettings.showActions !== false);
         dateCreatedToggle.checked = savedSettings.showDateCreated !== false;
         actionsToggle.checked = savedSettings.showActions !== false;
+        listTitle.value = savedSettings.listTitle || 'To-Do List';
     }
 
     settingsToggleBtn.addEventListener('click', () => {
@@ -78,6 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePriorityFilterState();
     });
 
+    listTitle.addEventListener('input', () => {
+        saveUserSettings();
+    });
+
     function updateDoneButtonState() {
         if (toggleDoneState === 0) {
             toggleDoneBtn.classList.remove('button-done-toggled', 'button-toggled');
@@ -117,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fontClass: fontSelect.value,
             showDateCreated: dateCreatedToggle.checked,
             showActions: actionsToggle.checked,
+            listTitle: listTitle.value,
         };
         localStorage.setItem('userSettings', JSON.stringify(userSettings));
     }
@@ -141,29 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getStatusColor(status) {
-        const currentTheme = document.body.className;
-        if (currentTheme.includes('theme-dark-navy')) {
-            switch (status) {
-                case 'Not started':
-                    return '#cc6666';
-                case 'Working on':
-                    return '#ffcc66';
-                case 'Done':
-                    return '#669966';
-                default:
-                    return '#cc6666';
-            }
-        } else {
-            switch (status) {
-                case 'Not started':
-                    return '#F4655A';
-                case 'Working on':
-                    return '#FFDC6D';
-                case 'Done':
-                    return '#92D050';
-                default:
-                    return '#F4655A';
-            }
+        switch (status) {
+            case 'Not started':
+                return 'status-not-started';
+            case 'Working on':
+                return 'status-working-on';
+            case 'Done':
+                return 'status-done';
+            default:
+                return 'status-not-started';
         }
     }
 
@@ -198,21 +191,23 @@ document.addEventListener('DOMContentLoaded', () => {
             let dateCreatedContent = task.dateCreated;
             if (isMobile) {
                 const date = new Date(task.dateCreated);
-                dateCreatedContent = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                dateCreatedContent = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).replace(' ', '-');
             }
 
             row.innerHTML = `
                 <td class="task-column">
                     <input type="text" class="task-text-input ${task.text ? '' : 'placeholder'}" value="${task.text}" placeholder="New Task">
                 </td>
-                <td class="date-created date-created-column" style="text-align: center; ${dateCreatedToggle.checked ? '' : 'display: none;'}">${dateCreatedContent}</td>
+                <td class="date-created date-created-column" style="text-align: center; ${dateCreatedToggle.checked ? '' : 'display: none;'}">
+                    <input type="text" class="date-created-input" value="${formatDateForDisplay(task.dateCreated)}" maxlength="6">
+                </td>
                 <td class="status-column" style="text-align: center;">
-                    <div class="status-box" data-id="${task.id}" style="background-color: ${getStatusColor(task.status)}" role="status" aria-live="polite"></div>
+                    <div class="status-box ${getStatusColor(task.status)}" data-id="${task.id}" role="status" aria-live="polite">${task.status}</div>
                 </td>
                 <td class="action-column" style="text-align: center; ${actionsToggle.checked ? '' : 'display: none;'}">
                     <div class="action-wrapper">
-                        <button class="priority-btn ${task.priority ? 'active' : ''}" data-id="${task.id}" ${task.status === 'Done' ? 'disabled' : ''}>🔥</button>
-                        <button class="delete-btn" data-id="${task.id}">🗑️</button>
+                        <span class="priority-btn ${task.priority ? 'active' : ''}" data-id="${task.id}" ${task.status === 'Done' ? 'disabled' : ''}>🔥</span>
+                        <span class="delete-btn" data-id="${task.id}">🗑️</span>
                     </div>
                 </td>
             `;
@@ -293,6 +288,13 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPriorityTasks();
         }, 300));
 
+        row.querySelector('.date-created-input').addEventListener('input', (e) => {
+            const task = tasks.find(t => t.id === taskId);
+            task.dateCreated = formatDateForStorage(e.target.value);
+            saveTasks();
+            renderTasks();
+        });
+
         row.querySelector('.status-box').addEventListener('click', () => {
             const task = tasks.find(t => t.id === taskId);
             task.status = cycleStatus(task.status);
@@ -334,6 +336,26 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 return 'Not started';
         }
+    }
+
+    function formatDateForDisplay(date) {
+        const [year, month, day] = date.split('-');
+        return `${monthToShortName(month)}-${day}`;
+    }
+
+    function formatDateForStorage(displayDate) {
+        const [month, day] = displayDate.split('-');
+        return `${new Date().getFullYear()}-${shortNameToMonth(month)}-${day.padStart(2, '0')}`;
+    }
+
+    function monthToShortName(month) {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return monthNames[parseInt(month) - 1];
+    }
+
+    function shortNameToMonth(shortName) {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return (monthNames.indexOf(shortName) + 1).toString().padStart(2, '0');
     }
 
     function loadTasksFromStorage() {
