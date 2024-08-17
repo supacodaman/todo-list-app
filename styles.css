@@ -20,10 +20,38 @@ body {
     overflow-x: auto;
 }
 
-/* Header styles */
-h1, h2 {
+/* Full background coverage for smaller screens */
+@media (max-width: 600px) {
+    body {
+        background-color: #f4f4f4;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .container {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+        background-color: inherit;
+    }
+}
+
+/* Editable list title */
+#list-title {
+    width: 100%;
     text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
     color: #333;
+    margin-bottom: 20px;
+}
+
+#list-title:focus {
+    outline: none;
+    background-color: #f0f0f0;
+    border-radius: 4px;
 }
 
 /* Theme toggle button styles */
@@ -71,7 +99,7 @@ h1, h2 {
     border: none;
     border-radius: 50%;
     transition: background-color 0.3s ease;
-    z-index: 10; /* Ensure it's on top */
+    z-index: 10;
 }
 
 .add-task-btn:hover {
@@ -110,8 +138,8 @@ th:not(.action-column), td:not(.action-column) {
 }
 
 th.date-created-column, td.date-created-column {
-    width: 15%;
-    min-width: 80px;
+    width: 25%;
+    min-width: 120px;
     text-align: center;
 }
 
@@ -124,20 +152,26 @@ th.status-column, td.status-column {
     overflow: hidden;
 }
 
-/* Task status box styles */
+/* Task status box styles for desktop mode */
 .status-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    border-radius: 0;
-    box-sizing: border-box;
-    overflow: hidden;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
     text-align: center;
     color: #000000;
+    white-space: nowrap;
+}
+
+.status-not-started {
+    background-color: #f4655a;
+}
+
+.status-working-on {
+    background-color: #ffdc6d;
+}
+
+.status-done {
+    background-color: #92d050;
 }
 
 /* Mobile swipe buttons */
@@ -257,19 +291,25 @@ li .status-box {
 
 /* Mobile responsiveness */
 @media (max-width: 600px) {
+    body {
+        background-color: #f4f4f4;
+        min-height: 100vh;
+        margin: 0;
+    }
     .container {
+        height: 100%;
         width: 100%;
-        margin: 0 auto;
-        padding: 5px;
-        box-sizing: border-box;
+        margin: 0;
+        padding: 10px;
+        background-color: inherit;
     }
 
     body {
-        font-size: 18px;
+        font-size: 14px;
     }
 
     th, td {
-        font-size: 16px;
+        font-size: 12px;
         padding: 5px;
         height: 5px;
     }
@@ -282,22 +322,23 @@ li .status-box {
 
     li {
         padding: 10px;
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .status-box {
         padding: 5px;
-        width: 100%;
     }
 
     th.date-created-column, td.date-created-column {
-        width: auto;
-        min-width: 76px;
+        width: 25%;
+        min-width: 120px;
         text-align: center;
     }
 
     th.action-column, td.action-column {
-        display: none;
+        width: 70px;
+        text-align: center;
+        padding: 4px;
     }
 
     td.action-column {
@@ -309,20 +350,8 @@ li .status-box {
         padding: 4px;
     }
 
-    .swipe-buttons {
-        display: flex;
-        justify-content: flex-end;
-        height: 100%;
-        position: absolute;
-        right: 0;
-        top: 0;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-    }
-
-    .task-row {
-        position: relative;
-        overflow: hidden;
+    .status-box span {
+        display: none;
     }
 }
 
@@ -407,7 +436,7 @@ li .status-box {
 }
 
 /* Style the input element to blend with the table cell */
-.task-text-input {
+.task-text-input, .date-created-input {
     border: none;
     background: transparent;
     width: 100%;
@@ -419,7 +448,7 @@ li .status-box {
 }
 
 /* Remove outline on focus */
-.task-text-input:focus {
+.task-text-input:focus, .date-created-input:focus {
     outline: none;
 }
 
