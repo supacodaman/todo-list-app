@@ -6,11 +6,12 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 /* Main container for the app */
 .container {
-    width: 95%;
+    width: 100%;
     max-width: 800px;
     margin: 10px auto;
     padding: 10px;
@@ -18,6 +19,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow-x: auto;
+    min-height: calc(100vh - 20px); /* Ensure container takes full height */
 }
 
 /* Full background coverage for smaller screens */
@@ -26,13 +28,15 @@ body {
         background-color: #f4f4f4;
         min-height: 100vh;
         margin: 0;
+        padding: 0;
     }
     .container {
-        height: 100%;
         width: 100%;
         margin: 0;
         padding: 10px;
         background-color: inherit;
+        min-height: 100vh;
+        box-sizing: border-box;
     }
 }
 
@@ -129,7 +133,7 @@ th {
 }
 
 th.action-column, td.action-column {
-    width: 15%;
+    width: 12%;
     text-align: center;
 }
 
@@ -138,9 +142,10 @@ th:not(.action-column), td:not(.action-column) {
 }
 
 th.date-created-column, td.date-created-column {
-    width: 25%;
-    min-width: 120px;
+    width: auto;
+    min-width: 150px; /* Increased width to prevent overflow */
     text-align: center;
+    white-space: nowrap;
 }
 
 th.status-column, td.status-column {
@@ -285,8 +290,21 @@ li .status-box {
     font-size: 24px;
 }
 
-.priority-controls button:hover {
-    background-color: #d88c009a;
+/* Priority and delete emoji button styles */
+.priority-btn, .delete-btn {
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.priority-btn.active, .delete-btn.active {
+    background-color: rgba(128, 128, 128, 0.473);
+    color: #333;
+}
+
+.priority-btn:hover, .delete-btn:hover {
+    background-color: #ddd;
 }
 
 /* Mobile responsiveness */
@@ -295,13 +313,14 @@ li .status-box {
         background-color: #f4f4f4;
         min-height: 100vh;
         margin: 0;
+        padding: 0;
     }
     .container {
-        height: 100%;
         width: 100%;
         margin: 0;
         padding: 10px;
         background-color: inherit;
+        min-height: 100vh; /* Ensure background extends fully */
     }
 
     body {
@@ -327,16 +346,31 @@ li .status-box {
 
     .status-box {
         padding: 5px;
+        color: transparent; /* Hide the text */
+        width: 100%; /* Fill the entire status box with color */
+        height: 100%; /* Ensure full height is filled */
+    }
+
+    .status-not-started {
+        background-color: #f4655a;
+    }
+
+    .status-working-on {
+        background-color: #ffdc6d;
+    }
+
+    .status-done {
+        background-color: #92d050;
     }
 
     th.date-created-column, td.date-created-column {
-        width: 25%;
-        min-width: 120px;
+        width: auto;
+        min-width: 150px;
         text-align: center;
     }
 
     th.action-column, td.action-column {
-        width: 70px;
+        width: 12%;
         text-align: center;
         padding: 4px;
     }
@@ -447,8 +481,12 @@ li .status-box {
     box-sizing: border-box;
 }
 
-/* Remove outline on focus */
-.task-text-input:focus, .date-created-input:focus {
+/* Prevent mobile zooming on input focus */
+input, select, textarea {
+    font-size: 16px;
+}
+
+input:focus, .task-text-input:focus, .date-created-input:focus {
     outline: none;
 }
 
